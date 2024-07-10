@@ -40,17 +40,23 @@ public:
     }
 
     void on_open(websocketpp::connection_hdl hdl) {
+        std::cout << std::endl << "-------------------------------" << std::endl;
         std::cout << "建立新的连接成功" << std::endl;
+        std::cout << "-------------------------------" << std::endl;
         std::lock_guard<std::mutex> lock(connection_mutex);
         handle_set.push_back(hdl);
     }
 
     void on_message(websocketpp::connection_hdl hdl, websocketpp::server<websocketpp::config::asio>::message_ptr msg) {
+        std::cout << std::endl << "-------------------------------" << std::endl;
         std::cout << "接收到消息: " << msg->get_payload() << std::endl;
+        std::cout << "-------------------------------" << std::endl;
     }
 
     void on_close(websocketpp::connection_hdl hdl) {
+        std::cout << std::endl << "-------------------------------" << std::endl;
         std::cout << "客户端连接断开，从句柄列表中移除" << std::endl;
+        std::cout << "-------------------------------" << std::endl;
         std::lock_guard<std::mutex> lock(connection_mutex);
         for (size_t i = 0; i < handle_set.size(); i++)
         {

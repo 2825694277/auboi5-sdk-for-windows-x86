@@ -1,4 +1,3 @@
-#include "example.h"
 #include "callback_data.h"
 #include "information_sever.h"
 std::string ROBOT_ADDR = "192.168.177.179";
@@ -20,7 +19,7 @@ int main(int argc, char* argv[])
 	while (true)
 	{
 		std::cout << "尝试登陆目标IP: " << ROBOT_ADDR << ':' << ROBOT_PORT << " 是否修改？ （y or else）" << std::endl;
-		std::cout << "输入 ："; cin >> c;
+		std::cout << "输入 ："; std::cin >> c;
 		if ('y' == c.c_str()[0])
 		{
 			std::cout << "地址:";
@@ -68,7 +67,7 @@ void menu_show(recive_data* recive_data_handle) {
 	rs_get_login_status(recive_data_handle->Rshd, &online_state);
 	while (true)
 	{
-		if (! RS_SUCC == rs_get_login_status(recive_data_handle->Rshd, &online_state))
+		if (RS_SUCC != rs_get_login_status(recive_data_handle->Rshd, &online_state))
 		{
 			std::cout << "获取状态失败" << std::endl;
 			online_state = false;
@@ -78,7 +77,7 @@ void menu_show(recive_data* recive_data_handle) {
 		std::cout << "指令 ‘1’ 开始接收并转发数据" <<std::endl;
 		std::cout << "指令 ‘2’ 停止接收并转发数据" << std::endl;
 		std::cout << "指令 ‘3’ 注销连接" << std::endl;
-		std::cout << "输入 ："; cin >> c;
+		std::cout << "输入 ："; std::cin >> c;
 		switch (c.c_str()[0])
 		{
 			case '1':recive_data_handle->start_recive_data(); break;

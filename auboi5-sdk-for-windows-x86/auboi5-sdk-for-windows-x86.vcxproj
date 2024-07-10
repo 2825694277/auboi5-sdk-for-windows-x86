@@ -111,7 +111,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callback_data.h" />

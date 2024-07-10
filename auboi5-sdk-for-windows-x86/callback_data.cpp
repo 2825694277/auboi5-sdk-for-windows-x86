@@ -208,9 +208,9 @@ void callback_Robot_event(const aubo_robot_namespace::RobotEventInfo* eventInfo,
 	nlohmann::json data;
 	data["package_type"] = "JointStatus";
 	
-	data["content"]["RobotEventType"] = eventInfo->eventType;
-	data["content"]["int"] = eventInfo->eventCode;
-	data["content"]["std::string"] = eventInfo->eventContent;
+	data["content"]["eventType"] = eventInfo->eventType;
+	data["content"]["eventCode"] = eventInfo->eventCode;
+	data["content"]["eventContent"] = eventInfo->eventContent;
 
 	// 信息发送，默认向最新建立起连接的客户端发送消息
 	websocket_server* server_handle = static_cast<websocket_server*>(arg);
