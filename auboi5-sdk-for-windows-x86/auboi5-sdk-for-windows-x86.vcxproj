@@ -114,10 +114,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callback_data.h" />
+    <ClInclude Include="control.h" />
     <ClInclude Include="information_sever.h" />
+    <ClInclude Include="main_sever.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="callback_data.cpp" />
+    <ClCompile Include="control.cpp" />
     <ClCompile Include="main_sever.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

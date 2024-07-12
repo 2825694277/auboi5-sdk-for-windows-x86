@@ -1,4 +1,7 @@
 #pragma once
+#ifndef INFORMATION_SEVER_H
+#define INFORMATION_SEVER_H
+
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 #include <boost/asio.hpp>
@@ -12,12 +15,13 @@
 
 class websocket_server {
 public:
-    websocket_server(int port = 9002, bool Debug = false) {
+    websocket_server(int port = 9002, bool Debug = false, std::function<void(std::string, websocket_server*)> on_message_callback = nullptr)
+        : on_message_callback(on_message_callback) {
         this->server.init_asio();
         this->server.set_reuse_addr(true); // 设置 SO_REUSEADDR 选项 -解决服务器关闭后没有完全释放端口导致报错
-        this->server.set_open_handler(boost::bind(&websocket_server::on_open, this, boost::placeholders::_1));
-        this->server.set_message_handler(boost::bind(&websocket_server::on_message, this, boost::placeholders::_1, boost::placeholders::_2));
-        this->server.set_close_handler(boost::bind(&websocket_server::on_close, this, boost::placeholders::_1));
+        this->server.set_open_handler(std::bind(&websocket_server::on_open, this, std::placeholders::_1));
+        this->server.set_message_handler(std::bind(&websocket_server::on_message, this,std::placeholders::_1, std::placeholders::_2));
+        this->server.set_close_handler(std::bind(&websocket_server::on_close, this, std::placeholders::_1));
         this->server.listen(port);
         this->server.start_accept();
 
@@ -51,6 +55,10 @@ public:
         std::cout << std::endl << "-------------------------------" << std::endl;
         std::cout << "接收到消息: " << msg->get_payload() << std::endl;
         std::cout << "-------------------------------" << std::endl;
+        if (on_message_callback != nullptr)
+        {
+            on_message_callback(msg->get_payload(),this);
+        }
     }
 
     void on_close(websocketpp::connection_hdl hdl) {
@@ -68,10 +76,20 @@ public:
         }
     }
 
-    void send_message(websocketpp::connection_hdl hdl, const std::string content) {
+    void send_message(const std::string content) {
         // 发送消息时使用互斥锁保护
         std::lock_guard<std::mutex> lock(send_mutex);
-        server.send(hdl, content, websocketpp::frame::opcode::text);
+        for (size_t i = 0; i < handle_set.size(); i++)
+        {
+            try
+            {
+            server.send(handle_set[i], content, websocketpp::frame::opcode::text);
+            }
+            catch (const std::exception&)
+            {
+                std::cout << "websocket_hdl_error" << std::endl;
+            }
+        }
     }
     std::vector<websocketpp::connection_hdl> handle_set;
     websocketpp::server<websocketpp::config::asio> server;
@@ -79,6 +97,8 @@ private:
     std::mutex send_mutex;
     std::mutex connection_mutex; // 保护 handle_set 的互斥锁
     std::thread server_thread;
+    std::function<void(std::string, websocket_server*)> on_message_callback;
 };
 
 
+#endif

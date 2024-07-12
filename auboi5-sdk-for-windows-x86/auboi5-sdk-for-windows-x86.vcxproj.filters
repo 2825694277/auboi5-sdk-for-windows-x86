@@ -24,12 +24,21 @@
     <ClInclude Include="callback_data.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="control.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="main_sever.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main_sever.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="callback_data.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="control.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
